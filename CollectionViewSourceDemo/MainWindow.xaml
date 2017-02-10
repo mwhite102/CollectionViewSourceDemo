@@ -4,9 +4,68 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CollectionViewSourceDemo"
+        xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="CollectionViewSource Demo" Height="350" Width="525">
+
+    <Window.Resources>
+
+        <CollectionViewSource x:Key="PeopleCVS" Source="{Binding People}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Name" />
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Width"
+                    Value="150" />
+            <Setter Property="Margin"
+                    Value="3" />
+        </Style>
+
+        <Style TargetType="Label">
+            <Setter Property="Margin"
+                    Value="3" />
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="Width"
+                    Value="75" />
+            <Setter Property="Margin"
+                    Value="3" />
+        </Style>
+
+    </Window.Resources>
+    
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         
+        <StackPanel Orientation="Horizontal">
+            <Label Content="Name" />
+            <TextBox x:Name="Name_TextBox" />
+
+            <Label Content="Age" />
+            <TextBox x:Name="Age_TextBox" />
+
+            <Button Content="Add"
+                    x:Name="Add_Button"
+                    Click="Add_Button_Click" />
+        </StackPanel>
+        
+        <ListView Grid.Row="1" ItemsSource="{Binding Source={StaticResource PeopleCVS}}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name"
+                                    DisplayMemberBinding="{Binding Name}" 
+                                    Width="150"/>
+                    <GridViewColumn Header="Age"
+                                    DisplayMemberBinding="{Binding Age}" 
+                                    Width="75"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>
