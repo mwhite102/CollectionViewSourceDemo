@@ -12,6 +12,11 @@
 
     <Window.Resources>
 
+        <!--
+            The CollectionViewSource's Source is bound to the People ObservableCollection
+            To get the SortDescription, import the System.CompenentModel namespace
+            xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+        -->
         <CollectionViewSource x:Key="PeopleCVS"
                               Source="{Binding People}">
             <CollectionViewSource.SortDescriptions>
@@ -19,12 +24,14 @@
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
 
+        <!--Default TextBox Style-->
         <Style TargetType="TextBox">
             <Setter Property="Width"
                     Value="150" />
             <Setter Property="Margin"
                     Value="3" />
             <Style.Triggers>
+                <!--Assigns Tooltip with Validation Error if an error exists-->
                 <Trigger Property="Validation.HasError"
                          Value="True">
                     <Setter Property="ToolTip"
@@ -34,11 +41,13 @@
             </Style.Triggers>
         </Style>
 
+        <!--Default Label Style-->
         <Style TargetType="Label">
             <Setter Property="Margin"
                     Value="3" />
         </Style>
 
+        <!--Default Button Style-->
         <Style TargetType="Button">
             <Setter Property="Width"
                     Value="75" />
@@ -50,35 +59,50 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal">
-            <Label Content="Name" />
-            <TextBox x:Name="Name_TextBox"
-                     Text="{Binding PersonName, Mode=TwoWay, ValidatesOnDataErrors=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" />
-            <Label Content="Age" />
-            <TextBox x:Name="Age_TextBox"
-                     Text="{Binding Age, Mode=TwoWay, ValidatesOnDataErrors=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" />
+        <!--People GroupBox-->
+        <GroupBox Grid.Row="0"
+                  Header="People"
+                  Margin="3">
+            <!--The People ListView.  The ItemsSource is the CollectionViewSource-->
+            <ListView ItemsSource="{Binding Source={StaticResource PeopleCVS}}"
+                      Margin="3">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Name"
+                                        DisplayMemberBinding="{Binding Name}"
+                                        Width="150" />
+                        <GridViewColumn Header="Age"
+                                        DisplayMemberBinding="{Binding Age}"
+                                        Width="75" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </GroupBox>
 
-            <Button Content="Add"
-                    x:Name="Add_Button"
-                    Click="Add_Button_Click" />
-        </StackPanel>
-
-        <ListView Grid.Row="1"
-                  ItemsSource="{Binding Source={StaticResource PeopleCVS}}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Name"
-                                    DisplayMemberBinding="{Binding Name}"
-                                    Width="150" />
-                    <GridViewColumn Header="Age"
-                                    DisplayMemberBinding="{Binding Age}"
-                                    Width="75" />
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <!--Add People GroupBox-->
+        <GroupBox Grid.Row="1"
+                  Header="Add People"
+                  Margin="3">
+            <StackPanel Grid.Row="1"
+                        Orientation="Horizontal"
+                        Margin="3">
+                <Label Content="_Name"
+                       Target="{Binding ElementName=Name_TextBox}"/>
+                <TextBox x:Name="Name_TextBox"
+                         Text="{Binding PersonName, Mode=TwoWay, ValidatesOnDataErrors=True,  UpdateSourceTrigger=PropertyChanged}" />
+                <Label Content="A_ge" 
+                       Target="{Binding ElementName=Age_TextBox}"/>
+                <TextBox x:Name="Age_TextBox"
+                         Text="{Binding Age, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                <Button Content="_Add"
+                        x:Name="Add_Button"
+                        Click="Add_Button_Click" />
+            </StackPanel>
+        </GroupBox>
+        
     </Grid>
 </Window>

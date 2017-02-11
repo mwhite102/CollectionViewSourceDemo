@@ -14,21 +14,38 @@ namespace CollectionViewSourceDemo
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged, IDataErrorInfo
     {
+        /// <summary>
+        /// PropertyChanged event.
+        /// </summary>
+        /// <remarks>
+        /// It's assigned an empty delegate so I don't have to check if
+        /// it's assigned anything or not
+        /// </remarks>
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
+        #region Constructors
 
         public MainWindow()
         {
             InitializeComponent();
             // Set the DataContext to this instance
             this.DataContext = this;
+            Name_TextBox.Focus();
         }
 
+        #endregion
+
+        /// <summary>
+        /// An ObservableCollection of PersonModels
+        /// </summary>
         public ObservableCollection<PersonModel> People { get; } = new ObservableCollection<PersonModel>();
+
+        #region Pubic Properties
 
         private int? _Age;
 
         [Range(1, 100, ErrorMessage = "Age should be between 1 to 100")]
-        [Required(ErrorMessage = "Age is required")]
+        [Required(ErrorMessage = "Please enter an age")]
         public int? Age
         {
             get { return _Age; }
@@ -44,7 +61,7 @@ namespace CollectionViewSourceDemo
 
         private string _PersonName;
 
-        [Required(ErrorMessage = "Name is required")]
+        [Required(ErrorMessage = "Please enter a name")]
         public string PersonName
         {
             get { return _PersonName; }
@@ -53,15 +70,34 @@ namespace CollectionViewSourceDemo
                 if (_PersonName != value)
                 {
                     _PersonName = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("Name"));
+                    PropertyChanged(this, new PropertyChangedEventArgs("PersonName"));
                 }
             }
         }
 
+        #endregion
+
+        #region EventHandlers
+
+        /// <summary>
+        /// Add_Button_Click EventHandler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Add_Button_Click(object sender, RoutedEventArgs e)
         {
+            // Add a new PersonModel to the People ObservableCollection
             People.Add(new PersonModel() { Name = this.PersonName, Age = this.Age.Value });
+            // Reset the Person Properties
+            this.PersonName = String.Empty;
+            this.Age = null;
+            // Set focus to the Name TextBox
+            Name_TextBox.Focus();
         }
+
+        #endregion
+
+        #region IDataErrorInfo 
 
         public string Error
         {
@@ -111,5 +147,7 @@ namespace CollectionViewSourceDemo
 
             return result;
         }
+
+        #endregion
     }
 }
