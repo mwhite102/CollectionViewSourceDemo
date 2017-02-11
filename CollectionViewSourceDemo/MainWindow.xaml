@@ -6,11 +6,14 @@
         xmlns:local="clr-namespace:CollectionViewSourceDemo"
         xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         mc:Ignorable="d"
-        Title="CollectionViewSource Demo" Height="350" Width="525">
+        Title="CollectionViewSource Demo"
+        Height="350"
+        Width="525">
 
     <Window.Resources>
 
-        <CollectionViewSource x:Key="PeopleCVS" Source="{Binding People}">
+        <CollectionViewSource x:Key="PeopleCVS"
+                              Source="{Binding People}">
             <CollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="Name" />
             </CollectionViewSource.SortDescriptions>
@@ -21,6 +24,14 @@
                     Value="150" />
             <Setter Property="Margin"
                     Value="3" />
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError"
+                         Value="True">
+                    <Setter Property="ToolTip"
+                            Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}">
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
         <Style TargetType="Label">
@@ -36,34 +47,36 @@
         </Style>
 
     </Window.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
+
         <StackPanel Orientation="Horizontal">
             <Label Content="Name" />
-            <TextBox x:Name="Name_TextBox" />
-
+            <TextBox x:Name="Name_TextBox"
+                     Text="{Binding PersonName, Mode=TwoWay, ValidatesOnDataErrors=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" />
             <Label Content="Age" />
-            <TextBox x:Name="Age_TextBox" />
+            <TextBox x:Name="Age_TextBox"
+                     Text="{Binding Age, Mode=TwoWay, ValidatesOnDataErrors=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" />
 
             <Button Content="Add"
                     x:Name="Add_Button"
                     Click="Add_Button_Click" />
         </StackPanel>
-        
-        <ListView Grid.Row="1" ItemsSource="{Binding Source={StaticResource PeopleCVS}}">
+
+        <ListView Grid.Row="1"
+                  ItemsSource="{Binding Source={StaticResource PeopleCVS}}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name"
-                                    DisplayMemberBinding="{Binding Name}" 
-                                    Width="150"/>
+                                    DisplayMemberBinding="{Binding Name}"
+                                    Width="150" />
                     <GridViewColumn Header="Age"
-                                    DisplayMemberBinding="{Binding Age}" 
-                                    Width="75"/>
+                                    DisplayMemberBinding="{Binding Age}"
+                                    Width="75" />
                 </GridView>
             </ListView.View>
         </ListView>
